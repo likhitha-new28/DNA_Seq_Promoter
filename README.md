@@ -38,6 +38,23 @@ dna-classifier predict --sequence ACGTTATAAAGCTACGTACGTACGT
 All commands also work as `python -m dna_classifier.cli ...`. Training writes the fitted model,
 class names, run settings, learning curves, and test splits under `artifacts/` and `data/processed/`.
 
+## One-click local web deployment
+
+On Windows, double-click **`run-local.cmd`** or run:
+
+```powershell
+.\run-local.ps1
+```
+
+The launcher creates an isolated environment, installs the project, trains a small demo model on
+the first launch, opens the browser, and serves the interface at:
+
+**http://localhost:8501**
+
+Keep the terminal window open while using the app. Press `Ctrl+C` in that window to stop it.
+Later launches reuse the environment and trained model. To suppress automatic browser opening, use
+`.\run-local.ps1 -SkipBrowser`.
+
 ## Input data
 
 Provide a CSV with exactly the following logical fields (extra columns are ignored):
@@ -61,6 +78,8 @@ tests/                Fast unit tests
 docs/                 Data and methodology notes
 data/                 Local raw/processed data (ignored by Git)
 artifacts/             Models, metrics, and plots (ignored by Git)
+run-local.cmd          Double-clickable Windows launcher
+run-local.ps1          Automated local deployment script
 ```
 
 ## Reproducibility
