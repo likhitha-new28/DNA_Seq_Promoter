@@ -69,7 +69,9 @@ def load_fasta(path: str | Path, label: str) -> pd.DataFrame:
     return pd.DataFrame({"sequence": records, "label": label})
 
 
-def generate_demo_dataset(samples_per_class: int = 300, length: int = 200, seed: int = 42) -> pd.DataFrame:
+def generate_demo_dataset(
+    samples_per_class: int = 300, length: int = 200, seed: int = 42
+) -> pd.DataFrame:
     """Create a balanced teaching dataset with planted regulatory motifs.
 
     This data demonstrates the pipeline; it is not suitable for biological claims.
@@ -89,4 +91,3 @@ def generate_demo_dataset(samples_per_class: int = 300, length: int = 200, seed:
             rows.append({"sequence": "".join(bases), "label": label})
     rng.shuffle(rows)
     return pd.DataFrame(rows)
-

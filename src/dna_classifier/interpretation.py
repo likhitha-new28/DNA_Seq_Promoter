@@ -2,16 +2,15 @@
 
 from __future__ import annotations
 
-import numpy as np
-
+from .data import standardize_sequence
 from .preprocessing import one_hot_encode
 
 
-def influential_windows(model, sequence: str, length: int, window_size: int = 10, top_k: int = 5) -> list[dict]:
+def influential_windows(
+    model, sequence: str, length: int, window_size: int = 10, top_k: int = 5
+) -> list[dict]:
     """Rank windows by the prediction drop caused by masking them with N bases."""
-    standardized = ("N" * length + sequence.upper() + "N" * length)
-    start = (len(standardized) - length) // 2
-    standardized = standardized[start : start + length]
+    standardized = standardize_sequence(sequence, length)
     original = one_hot_encode(standardized, length)
     original_probabilities = model.predict(original[None, ...], verbose=0)[0]
     predicted_class = int(original_probabilities.argmax())
@@ -29,4 +28,3 @@ def influential_windows(model, sequence: str, length: int, window_size: int = 10
             }
         )
     return sorted(candidates, key=lambda item: item["importance"], reverse=True)[:top_k]
-

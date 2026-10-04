@@ -17,7 +17,9 @@ from sklearn.metrics import (
 from sklearn.preprocessing import label_binarize
 
 
-def calculate_metrics(y_true: np.ndarray, probabilities: np.ndarray, class_names: list[str]) -> dict:
+def calculate_metrics(
+    y_true: np.ndarray, probabilities: np.ndarray, class_names: list[str]
+) -> dict:
     """Calculate common classification metrics using macro averaging."""
     predictions = probabilities.argmax(axis=1)
     precision, recall, f1, _ = precision_recall_fscore_support(
@@ -53,8 +55,15 @@ def save_evaluation(
 
     matrix = confusion_matrix(y_true, probabilities.argmax(axis=1), labels=range(len(class_names)))
     figure, axis = plt.subplots(figsize=(7, 6))
-    sns.heatmap(matrix, annot=True, fmt="d", cmap="Blues", xticklabels=class_names,
-                yticklabels=class_names, ax=axis)
+    sns.heatmap(
+        matrix,
+        annot=True,
+        fmt="d",
+        cmap="Blues",
+        xticklabels=class_names,
+        yticklabels=class_names,
+        ax=axis,
+    )
     axis.set(xlabel="Predicted label", ylabel="True label", title="Confusion matrix")
     figure.tight_layout()
     figure.savefig(output_dir / "confusion_matrix.png", dpi=160)
@@ -76,4 +85,3 @@ def save_learning_curves(history: dict, output_path: str | Path) -> None:
     figure.tight_layout()
     figure.savefig(output_path, dpi=160)
     plt.close(figure)
-

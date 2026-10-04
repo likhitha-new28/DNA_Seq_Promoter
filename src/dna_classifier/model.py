@@ -20,7 +20,9 @@ def build_cnn(sequence_length: int, number_of_classes: int = 3):
             tf.keras.layers.Dropout(0.3),
             tf.keras.layers.Dense(32, activation="relu"),
             tf.keras.layers.Dropout(0.2),
-            tf.keras.layers.Dense(number_of_classes, activation="softmax", name="class_probabilities"),
+            tf.keras.layers.Dense(
+                number_of_classes, activation="softmax", name="class_probabilities"
+            ),
         ],
         name="dna_regulatory_cnn",
     )
@@ -43,4 +45,3 @@ def training_callbacks(model_path: str):
         tf.keras.callbacks.ModelCheckpoint(model_path, monitor="val_loss", save_best_only=True),
         tf.keras.callbacks.ReduceLROnPlateau(monitor="val_loss", patience=2, factor=0.5),
     ]
-

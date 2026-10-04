@@ -56,7 +56,11 @@ def command_train(args: argparse.Namespace) -> None:
 
     frame = load_csv(args.data)
     split = stratified_split(frame, args.test_size, args.validation_size, args.seed)
-    for name, part in (("train", split.train), ("validation", split.validation), ("test", split.test)):
+    for name, part in (
+        ("train", split.train),
+        ("validation", split.validation),
+        ("test", split.test),
+    ):
         part.to_csv(processed_dir / f"{name}.csv", index=False)
 
     x_train = encode_sequences(split.train["sequence"], args.length)
@@ -81,7 +85,9 @@ def command_train(args: argparse.Namespace) -> None:
     (artifact_dir / "settings.json").write_text(json.dumps(settings, indent=2), encoding="utf-8")
 
     best_model = tf.keras.models.load_model(model_path)
-    probabilities = best_model.predict(encode_sequences(split.test["sequence"], args.length), verbose=0)
+    probabilities = best_model.predict(
+        encode_sequences(split.test["sequence"], args.length), verbose=0
+    )
     metrics = save_evaluation(
         encode_labels(split.test["label"]), probabilities, list(LABELS), artifact_dir
     )
@@ -151,7 +157,9 @@ def build_parser() -> argparse.ArgumentParser:
     train.add_argument("--processed-dir", default="data/processed")
     train.set_defaults(function=command_train)
 
-    evaluate = subparsers.add_parser("evaluate", help="evaluate the saved model on labeled CSV data")
+    evaluate = subparsers.add_parser(
+        "evaluate", help="evaluate the saved model on labeled CSV data"
+    )
     evaluate.add_argument("--data", required=True)
     evaluate.add_argument("--artifact-dir", default="artifacts")
     evaluate.set_defaults(function=command_evaluate)
@@ -170,4 +178,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

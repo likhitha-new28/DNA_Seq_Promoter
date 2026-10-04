@@ -70,4 +70,3 @@ def stratified_split(
         validation=validation.reset_index(drop=True),
         test=test.reset_index(drop=True),
     )
-
