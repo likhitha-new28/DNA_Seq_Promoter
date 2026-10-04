@@ -20,7 +20,7 @@ neural network (CNN), evaluation, prediction, and simple model interpretation.
 
 ## Quick start
 
-Python 3.10 or 3.11 is recommended.
+Python 3.10–3.12 is recommended. A compatible TensorFlow build is required for your Python version.
 
 ```bash
 python -m venv .venv

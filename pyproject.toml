@@ -7,7 +7,7 @@ name = "dna-regulatory-classifier"
 version = "1.0.0"
 description = "Beginner-friendly promoter, enhancer, and background DNA classifier"
 readme = "README.md"
-requires-python = ">=3.10,<3.13"
+requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [{name = "MU Likhitha"}]
 dependencies = [
