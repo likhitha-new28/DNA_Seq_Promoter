@@ -1,5 +1,11 @@
 # DNA Promoter / Enhancer Classifier
 
+[![Launch App](https://img.shields.io/badge/Launch_App-GitHub_Codespaces-2ea44f?style=for-the-badge&logo=github)](https://codespaces.new/likhitha-new28/DNA_Seq_Promoter?quickstart=1)
+
+Click **Launch App** to create a ready-to-use environment in GitHub Codespaces. The repository
+automatically installs its dependencies, prepares the demo model, starts the web interface, and
+opens the app URL. Initial setup can take several minutes because TensorFlow must be installed.
+
 A beginner-friendly deep-learning project that classifies fixed-length DNA sequences as
 **promoter**, **enhancer**, or **background**. It includes data preparation, a 1D convolutional
 neural network (CNN), evaluation, prediction, and simple model interpretation.
@@ -40,7 +46,8 @@ class names, run settings, learning curves, and test splits under `artifacts/` a
 
 ## One-click local web deployment
 
-On Windows, double-click **`run-local.cmd`** or run:
+GitHub cannot run code directly on a visitor's physical computer. To run on your own Windows
+machine, clone or download the repository and double-click **`run-local.cmd`**, or run:
 
 ```powershell
 .\run-local.ps1
