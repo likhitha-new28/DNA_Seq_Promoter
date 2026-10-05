@@ -1,99 +1,101 @@
 # DNA Promoter / Enhancer Classifier
 
-[![Launch App](https://img.shields.io/badge/Launch_App-GitHub_Codespaces-2ea44f?style=for-the-badge&logo=github)](https://codespaces.new/likhitha-new28/DNA_Seq_Promoter?quickstart=1)
+A local DNA classification workbench by **MU Likhitha**. It uses a small 1D CNN to
+explore promoter, enhancer and background predictions, then shows which sequence
+windows influenced the result. You can inspect held-out metrics and download a
+prediction report from the same app.
 
-Click **Launch App** to create a ready-to-use environment in GitHub Codespaces. The repository
-automatically installs its dependencies, prepares the demo model, starts the web interface, and
-opens the app URL. Initial setup can take several minutes because TensorFlow must be installed.
+**The default model learns planted motifs in synthetic DNA.** Its accuracy is a
+software demonstration, not evidence that it identifies functional regulatory
+regions in a real genome.
 
-A beginner-friendly deep-learning project that classifies fixed-length DNA sequences as
-**promoter**, **enhancer**, or **background**. It includes data preparation, a 1D convolutional
-neural network (CNN), evaluation, prediction, and simple model interpretation.
+## Launch and use it locally
 
-> **Educational project:** the included demo data contains planted motifs. Results from it are a
-> software check, not biological evidence. Use curated genomic data and careful experimental
-> validation before drawing scientific conclusions.
-
-## What the pipeline does
-
-1. Loads labeled sequences from CSV, or creates a balanced demo dataset.
-2. Cleans bases, centre-crops long sequences, and pads short sequences with `N`.
-3. Makes stratified train/validation/test splits.
-4. One-hot encodes bases in `A, C, G, T` channels (`N` becomes all zeros).
-5. Trains a compact 1D CNN to recognize local sequence patterns.
-6. Reports accuracy, precision, recall, F1, multiclass ROC-AUC, and a confusion matrix.
-7. Finds influential sequence windows using a simple occlusion analysis.
-
-## Quick start
-
-Python 3.10–3.12 is recommended. A compatible TensorFlow build is required for your Python version.
-
-```bash
-python -m venv .venv
-# Windows: .venv\Scripts\activate
-# macOS/Linux: source .venv/bin/activate
-pip install -r requirements.txt
-pip install -e .
-
-dna-classifier demo-data --output data/raw/demo_sequences.csv
-dna-classifier train --data data/raw/demo_sequences.csv --epochs 15
-dna-classifier evaluate --data data/processed/test.csv
-dna-classifier predict --sequence ACGTTATAAAGCTACGTACGTACGT
-```
-
-All commands also work as `python -m dna_classifier.cli ...`. Training writes the fitted model,
-class names, run settings, learning curves, and test splits under `artifacts/` and `data/processed/`.
-
-## One-click local web deployment
-
-GitHub cannot run code directly on a visitor's physical computer. To run on your own Windows
-machine, clone or download the repository and double-click **`run-local.cmd`**, or run:
+Install Python (3.11 is a good starting point), clone this repository, and open its
+folder. On Windows, double-click **`run-local.cmd`**. The first launch installs the
+dependencies and trains the demo model, so allow a few minutes and an internet
+connection. Later launches reuse the prepared environment and model.
 
 ```powershell
-.\run-local.ps1
+git clone https://github.com/likhitha-new28/DNA_Seq_Promoter.git
+cd DNA_Seq_Promoter
+.\run-local.cmd
 ```
 
-The launcher creates an isolated environment, installs the project, trains a small demo model on
-the first launch, opens the browser, and serves the interface at:
+Open **http://127.0.0.1:8501** if your browser doesn't open automatically. Choose an
+example or paste your own A/C/G/T/N sequence, then click **Classify sequence**. The
+app shows all three model scores, the exact cropped or padded input, and influential
+windows. Open **Evaluation** for the test metrics and confusion matrix, or
+**Method & limitations** for the scientific context. Keep the terminal open while
+using the app; press **Ctrl+C** there to stop it.
 
-**http://localhost:8501**
+Before an interview, run `.\run-local.cmd -PrepareOnly` while online. Once prepared,
+the local demo needs no dependency downloads or external prediction service.
 
-Keep the terminal window open while using the app. Press `Ctrl+C` in that window to stop it.
-Later launches reuse the environment and trained model. To suppress automatic browser opening, use
-`.\run-local.ps1 -SkipBrowser`.
-
-## Input data
-
-Provide a CSV with exactly the following logical fields (extra columns are ignored):
-
-```csv
-sequence,label
-ACGTTATAAAGCTACGT,promoter
-TTGCCACGTGAAAATC,enhancer
-GCTAGCTAGCTAGCTA,background
+```powershell
+.\run-local.cmd -SkipBrowser          # open the URL yourself
+.\run-local.cmd -Port 8502            # if another app uses port 8501
+.\run-local.cmd -Retrain              # explicitly replace the model with a fresh demo
+.\run-local.cmd -RefreshDependencies  # repair/reinstall the Python dependencies
 ```
 
-Labels must be `promoter`, `enhancer`, or `background`. Sequences may contain `A`, `C`, `G`, `T`,
-and `N` (case-insensitive). See [docs/data-guide.md](docs/data-guide.md) for responsible sources and
-conversion advice.
+On macOS/Linux, from the repository folder:
 
-## Repository layout
-
-```text
-src/dna_classifier/   Python package and CLI
-tests/                Fast unit tests
-docs/                 Data and methodology notes
-data/                 Local raw/processed data (ignored by Git)
-artifacts/             Models, metrics, and plots (ignored by Git)
-run-local.cmd          Double-clickable Windows launcher
-run-local.ps1          Automated local deployment script
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e .
+python -m dna_classifier.cli prepare-demo
+python -m streamlit run src/dna_classifier/webapp.py --server.address 127.0.0.1 --browser.gatherUsageStats false
 ```
 
-## Reproducibility
+Python 3.13 / TensorFlow 2.21 were also tested on Windows. Other versions require a
+compatible TensorFlow wheel. No GPU is required. If PowerShell blocks scripts, use
+the `.cmd` launcher; it sets execution policy for that process only.
 
-The default random seed is `42`. Exact deep-learning results can still differ slightly by hardware
-and TensorFlow version. Run `pytest` for unit tests and `ruff check .` for lint checks.
+## Presenting the project
 
-## License
+Follow the [five-minute interview walkthrough](docs/interview-demo.md). It covers
+the demo order, likely bioinformatics questions and the limits of synthetic data.
+The [recorded local validation](docs/demo-validation.md) includes measured results;
+future training runs can differ by hardware and package version.
 
-MIT
+[![Launch in Codespaces](https://img.shields.io/badge/Launch-GitHub_Codespaces-2ea44f?logo=github)](https://codespaces.new/likhitha-new28/DNA_Seq_Promoter?quickstart=1)
+
+Codespaces runs remotely and needs internet. Its setup prepares the same synthetic
+demo and forwards port 8501. The local launcher is the preferred interview option.
+
+## Train on your own labeled data
+
+Provide a CSV with `sequence,label` columns. Labels are `promoter`, `enhancer`, or
+`background`. Missing values, invalid bases and conflicting duplicate labels are
+rejected; identical model inputs are deduplicated before splitting.
+
+```bash
+python -m dna_classifier.cli train --data path/to/sequences.csv --data-source "your dataset release and genome assembly"
+python -m dna_classifier.cli evaluate --data data/processed/test.csv
+python -m dna_classifier.cli predict --sequence ACGTTATAAAGCTACGTACGTACGT
+```
+
+Evaluation writes to `artifacts/evaluation/`, preserving the original training test
+report. Models, generated data and local reports are ignored by Git. Custom trained
+models with current, valid artifacts are reused by the launcher; `-Retrain` replaces
+them with the synthetic demo. Short example sequences are heavily padded and may
+produce unreliable predictions.
+
+Read the [data guide](docs/data-guide.md) and [methodology](docs/methodology.md) before
+using genomic annotations. Exact duplicate removal alone does not prevent leakage
+from homologous sequences, overlapping loci or reverse complements.
+
+## Development checks
+
+```bash
+python -m pip install -r requirements-dev.txt
+python -m pytest -q
+python -m ruff check .
+python -m ruff format --check src tests
+```
+
+The tests cover preprocessing, splitting, metrics, prediction validation, batched
+occlusion and Streamlit interactions. GitHub Actions runs the same checks and a
+small TensorFlow training/evaluation smoke test. Licensed under [MIT](LICENSE).

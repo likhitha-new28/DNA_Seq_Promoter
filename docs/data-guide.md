@@ -5,9 +5,10 @@
 Real regulatory-region experiments need carefully chosen, consistently annotated data. Useful
 starting points include:
 
-- **EPDnew** for experimentally validated eukaryotic promoters.
-- **FANTOM5** and **ENCODE SCREEN** for candidate enhancers.
-- **Ensembl** or **UCSC Genome Browser** for reference genome sequences and coordinates.
+- [EPDnew](https://epd.expasy.org/epd/) for experimentally validated eukaryotic promoters.
+- [ENCODE SCREEN](https://screen.encodeproject.org/) for candidate regulatory elements.
+- [Ensembl](https://www.ensembl.org/) or [UCSC Genome Browser](https://genome.ucsc.edu/)
+  for reference genome sequences and coordinates.
 
 Check each provider's license and citation requirements. Keep downloaded files under `data/raw/`;
 that directory is intentionally ignored because genomic datasets can be large and may be subject to
@@ -41,4 +42,12 @@ pd.concat(frames, ignore_index=True).to_csv("data/raw/sequences.csv", index=Fals
 
 Inspect class counts and sequence lengths before training. The CLI centre-crops and pads sequences,
 but choosing biologically meaningful windows is part of the experimental design.
+
+The loader rejects missing values and malformed or empty FASTA records. Training
+standardizes sequences before removing exact duplicates and rejects conflicting
+labels for identical model inputs. The resulting CSV splits contain the standardized
+inputs. Missing classes or too few unique samples produce an error rather than an
+unrepresentative test split.
+
+For introductory terminology, see the [NHGRI promoter definition](https://www.genome.gov/genetics-glossary/Promoter).
 

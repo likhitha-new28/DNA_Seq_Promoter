@@ -8,6 +8,10 @@ def build_cnn(sequence_length: int, number_of_classes: int = 3):
 
     TensorFlow is imported here so data utilities remain usable without loading it.
     """
+    if sequence_length < 18:
+        raise ValueError("The CNN requires at least 18 bases per sequence")
+    if number_of_classes < 2:
+        raise ValueError("The CNN requires at least two classes")
     import tensorflow as tf
 
     model = tf.keras.Sequential(

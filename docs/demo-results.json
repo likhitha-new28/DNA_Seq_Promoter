@@ -1,0 +1,165 @@
+{
+  "validation_date_local": "2026-10-05",
+  "timezone": "Asia/Calcutta",
+  "python_version": "3.13.0",
+  "platform": "Windows (CPU)",
+  "packages": {
+    "tensorflow": "2.21.0",
+    "numpy": "2.5.3",
+    "pandas": "2.3.3",
+    "scikit-learn": "1.9.1",
+    "streamlit": "1.65.0",
+    "pytest": "8.4.2",
+    "ruff": "0.16.10"
+  },
+  "training_run": {
+    "artifact_version": 2,
+    "sequence_length": 200,
+    "class_names": [
+      "promoter",
+      "enhancer",
+      "background"
+    ],
+    "seed": 42,
+    "data_source": "synthetic planted motifs (educational)",
+    "data_sha256": "836fa92ffe7c7847ea2f91ec164bdc7c51a8af1a64da7c18d35f0726ef58196a",
+    "model_sha256": "c06c3571e06f2a3cba2d15898145f2f75c6c22fe2b846090515d2cab72382760",
+    "tensorflow_version": "2.21.0",
+    "trained_at_utc": "2026-10-05T17:42:57.250671+00:00",
+    "epochs_requested": 30,
+    "epochs_run": 21,
+    "batch_size": 32,
+    "test_fraction": 0.15,
+    "validation_fraction": 0.15,
+    "split_counts": {
+      "train": 1260,
+      "validation": 270,
+      "test": 270
+    },
+    "class_counts": {
+      "train": {
+        "background": 420,
+        "enhancer": 420,
+        "promoter": 420
+      },
+      "validation": {
+        "enhancer": 90,
+        "background": 90,
+        "promoter": 90
+      },
+      "test": {
+        "promoter": 90,
+        "enhancer": 90,
+        "background": 90
+      }
+    }
+  },
+  "test_metrics": {
+    "accuracy": 0.9481481481481482,
+    "precision_macro": 0.9511715797430084,
+    "recall_macro": 0.9481481481481482,
+    "f1_macro": 0.9484047134715121,
+    "roc_auc_ovr_macro": 0.9722633744855966
+  },
+  "confusion_matrix": {
+    "class_names": [
+      "promoter",
+      "enhancer",
+      "background"
+    ],
+    "matrix": [
+      [
+        86,
+        4,
+        0
+      ],
+      [
+        2,
+        88,
+        0
+      ],
+      [
+        2,
+        6,
+        82
+      ]
+    ]
+  },
+  "per_class_report": {
+    "promoter": {
+      "precision": 0.9555555555555556,
+      "recall": 0.9555555555555556,
+      "f1-score": 0.9555555555555556,
+      "support": 90.0
+    },
+    "enhancer": {
+      "precision": 0.8979591836734694,
+      "recall": 0.9777777777777777,
+      "f1-score": 0.9361702127659575,
+      "support": 90.0
+    },
+    "background": {
+      "precision": 1.0,
+      "recall": 0.9111111111111111,
+      "f1-score": 0.9534883720930233,
+      "support": 90.0
+    },
+    "accuracy": 0.9481481481481482,
+    "macro avg": {
+      "precision": 0.9511715797430084,
+      "recall": 0.9481481481481482,
+      "f1-score": 0.9484047134715121,
+      "support": 270.0
+    },
+    "weighted avg": {
+      "precision": 0.9511715797430083,
+      "recall": 0.9481481481481482,
+      "f1-score": 0.948404713471512,
+      "support": 270.0
+    }
+  },
+  "independent_examples": {
+    "Promoter motif example": {
+      "prediction": "promoter",
+      "probabilities": {
+        "promoter": 0.9910085797309875,
+        "enhancer": 0.0007505775429308414,
+        "background": 0.00824092235416174
+      },
+      "input_length": 200,
+      "model_sequence": "CAGCGCAGCGGCAGATCAAGCAGGAGGCGGAATGTAAACAGAAGGTATGCTTAGGTGGATAGGGAGTGAGCAACAAACGGATCGTTTCTCCCATTATAAATTGGCACAGGGAACTACCTGCGGCGGTTTGCCTCTAGTACAGGGCAACGATTCAACTGGGACCGGGGCTCATTGCACGCCAAAGAGGCCCCAGTAATGGA",
+      "known_bases": 200,
+      "crop_start": 0,
+      "padding_left": 0
+    },
+    "Enhancer motif example": {
+      "prediction": "enhancer",
+      "probabilities": {
+        "promoter": 0.0025942192878574133,
+        "enhancer": 0.9869753122329712,
+        "background": 0.010430458933115005
+      },
+      "input_length": 200,
+      "model_sequence": "GGACCATTCCCCTCGCTTTGCGTTACCAAGCACCTCTACGGGTATTGGTCACCGTTAGGCACGTGGAAAATATTTACGCAATACGAAAAGCGTCGTCTCGTATCCTCATTTATCTATCGCGGTAGCAGCACTTAATTACCAGCGGAGCACATAGTACTAGACAGCAGATGACCTAGCTTACAATTATCCCCCGTGCTAAG",
+      "known_bases": 200,
+      "crop_start": 0,
+      "padding_left": 0
+    },
+    "Background control": {
+      "prediction": "background",
+      "probabilities": {
+        "promoter": 0.03573806956410408,
+        "enhancer": 0.05733981728553772,
+        "background": 0.9069220423698425
+      },
+      "input_length": 200,
+      "model_sequence": "CCTCGCTACATATTGGAAGCATCGCGAAGCTACTCTAACAGCTGATGCTATAACGTATGTTGGTTTGGCAACCGTCGCACTCGTCGTGGTCCGACGCTCTTTAGAGGTCGGGTCATTTGCTGAACCCTTTCTCGAAAACTATGATCGGAAAGCTTAACTGCAAGCCTTATCAATTATTATTGAATCTAGCTAGCACGGTA",
+      "known_bases": 200,
+      "crop_start": 0,
+      "padding_left": 0
+    }
+  },
+  "automated_tests_passed": 48,
+  "browser_check": "Chrome: examples, validation, padding, tabs, downloads, narrow viewport",
+  "scope": "Synthetic educational data only; not evidence of biological validity"
+}

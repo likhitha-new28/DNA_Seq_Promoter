@@ -14,6 +14,7 @@ import numpy as np
 import seaborn as sns
 from sklearn.metrics import (
     accuracy_score,
+    classification_report,
     confusion_matrix,
     precision_recall_fscore_support,
     roc_auc_score,
@@ -25,9 +26,26 @@ def calculate_metrics(
     y_true: np.ndarray, probabilities: np.ndarray, class_names: list[str]
 ) -> dict:
     """Calculate common classification metrics using macro averaging."""
+    y_true = np.asarray(y_true)
+    probabilities = np.asarray(probabilities)
+    if (
+        y_true.ndim != 1
+        or not len(y_true)
+        or probabilities.shape != (len(y_true), len(class_names))
+        or len(class_names) < 2
+        or len(set(class_names)) != len(class_names)
+        or not np.issubdtype(y_true.dtype, np.integer)
+        or (y_true < 0).any()
+        or (y_true >= len(class_names)).any()
+        or not np.isfinite(probabilities).all()
+        or (probabilities < 0).any()
+        or (probabilities > 1).any()
+        or not np.allclose(probabilities.sum(axis=1), 1, atol=1e-5)
+    ):
+        raise ValueError("Expected nonempty integer labels and valid class probabilities")
     predictions = probabilities.argmax(axis=1)
     precision, recall, f1, _ = precision_recall_fscore_support(
-        y_true, predictions, average="macro", zero_division=0
+        y_true, predictions, labels=range(len(class_names)), average="macro", zero_division=0
     )
     metrics = {
         "accuracy": float(accuracy_score(y_true, predictions)),
@@ -36,10 +54,14 @@ def calculate_metrics(
         "f1_macro": float(f1),
     }
     try:
-        binary_labels = label_binarize(y_true, classes=range(len(class_names)))
-        metrics["roc_auc_ovr_macro"] = float(
-            roc_auc_score(binary_labels, probabilities, average="macro", multi_class="ovr")
-        )
+        if set(y_true) != set(range(len(class_names))):
+            raise ValueError("ROC-AUC requires every class in the evaluation set")
+        if len(class_names) == 2:
+            auc = roc_auc_score(y_true, probabilities[:, 1])
+        else:
+            binary_labels = label_binarize(y_true, classes=range(len(class_names)))
+            auc = roc_auc_score(binary_labels, probabilities, average="macro", multi_class="ovr")
+        metrics["roc_auc_ovr_macro"] = float(auc)
     except ValueError:
         metrics["roc_auc_ovr_macro"] = None
     return metrics
@@ -58,6 +80,21 @@ def save_evaluation(
     (output_dir / "metrics.json").write_text(json.dumps(metrics, indent=2), encoding="utf-8")
 
     matrix = confusion_matrix(y_true, probabilities.argmax(axis=1), labels=range(len(class_names)))
+    report = classification_report(
+        y_true,
+        probabilities.argmax(axis=1),
+        labels=range(len(class_names)),
+        target_names=class_names,
+        output_dict=True,
+        zero_division=0,
+    )
+    (output_dir / "classification_report.json").write_text(
+        json.dumps(report, indent=2), encoding="utf-8"
+    )
+    (output_dir / "confusion_matrix.json").write_text(
+        json.dumps({"class_names": class_names, "matrix": matrix.tolist()}, indent=2),
+        encoding="utf-8",
+    )
     figure, axis = plt.subplots(figsize=(7, 6))
     sns.heatmap(
         matrix,
